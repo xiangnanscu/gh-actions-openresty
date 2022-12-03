@@ -38,6 +38,7 @@ const main = async () => {
     const sourceTar = await tc.downloadTool(`https://openresty.org/download/openresty-${openrestyVersion}.tar.gz`)
 
     await io.mkdirP(extractPath)
+    await io.mkdirP(opensslPath)
     await tc.extractTar(sourceTar, BUILD_PREFIX)
     await exec.exec(`git clone --depth=1 https://github.com/openresty/lua-nginx-module.git
       git clone --depth=1 https://github.com/openresty/stream-lua-nginx-module.git
