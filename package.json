@@ -4,7 +4,7 @@
   "description": "Install OpenResty inside of your GitHub Actions runner",
   "main": "main.js",
   "scripts": {
-    "push": "git add . && git commit -am \"${msg-message: } $(date +%Y-%m-%d_%H:%M:%S)\" && git push origin master",
+    "push": "git add . && git commit -am \"${msg-message: } $(date +%Y-%m-%d_%H:%M:%S)\" && git push origin main",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "repository": {

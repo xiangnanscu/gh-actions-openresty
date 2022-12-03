@@ -40,9 +40,13 @@ const main = async () => {
     await io.mkdirP(extractPath)
     await io.mkdirP(opensslPath)
     await tc.extractTar(sourceTar, BUILD_PREFIX)
-    await exec.exec(`git clone --depth=1 https://github.com/openresty/lua-nginx-module.git
-      git clone --depth=1 https://github.com/openresty/stream-lua-nginx-module.git
-      git clone --depth=1 https://github.com/fffonion/lua-resty-openssl-aux-module.git`, undefined, {
+    await exec.exec(`git clone --depth=1 https://github.com/openresty/lua-nginx-module.git`, undefined, {
+      cwd: opensslPath
+    })
+    await exec.exec(`git clone --depth=1 https://github.com/openresty/stream-lua-nginx-module.git`, undefined, {
+      cwd: opensslPath
+    })
+    await exec.exec(`git clone --depth=1 https://github.com/openresty/lua-resty-openssl-aux-module.git`, undefined, {
       cwd: opensslPath
     })
     let finalConfigureFlags = `-j4 --add-module=${opensslPath}/lua-resty-openssl-aux-module --add-module=${opensslPath}/lua-resty-openssl-aux-module/stream`
