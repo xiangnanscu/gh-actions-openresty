@@ -14,13 +14,13 @@ jobs:
 
     steps:
     - uses: actions/checkout@master
-    - uses: leafo/gh-actions-openresty@main
+    - uses: xiangnanscu/gh-actions-openresty@main
       with:
         openrestyVersion: ${{ matrix.openrestyVersion }}
         buildCache: ${{ matrix.buildCache }}
 
     - name: test resty
-      run: resty -e 'print("hi from lua")'
+      run: resty -e 'print("hi from xiangnanscu lua")'
 
     - name: test opm
-      run: opm --cwd install leafo/pgmoon
+      run: opm --cwd install xiangnanscu/pgmoon

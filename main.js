@@ -17,9 +17,9 @@ const makeCacheKey = (openrestyVersion, configureFlags) => `openresty:${openrest
 const main = async () => {
   const openrestyVersion = core.getInput('openrestyVersion', { required: true })
   const configureFlags = core.getInput('configureFlags')
-
-  const extractPath = path.join(process.cwd(), BUILD_PREFIX, `openresty-${openrestyVersion}`)
-
+  const cacheDir = path.join(process.cwd(), BUILD_PREFIX)
+  const extractPath = path.join(cacheDir, `openresty-${openrestyVersion}`)
+  const opensslPath = path.join(cacheDir, 'openssl')
   const cachePaths = [BUILD_PREFIX]
   const cacheKey = makeCacheKey(openrestyVersion, configureFlags || "")
 
@@ -39,13 +39,18 @@ const main = async () => {
 
     await io.mkdirP(extractPath)
     await tc.extractTar(sourceTar, BUILD_PREFIX)
-
-    let finalConfigureFlags = "-j4"
+    await exec.exec(`git clone --depth=1 https://github.com/openresty/lua-nginx-module.git
+      git clone --depth=1 https://github.com/openresty/stream-lua-nginx-module.git
+      git clone --depth=1 https://github.com/fffonion/lua-resty-openssl-aux-module.git`, undefined, {
+      cwd: opensslPath
+    })
+    let finalConfigureFlags = `-j4 --add-module=${opensslPath}/lua-resty-openssl-aux-module --add-module=${opensslPath}/lua-resty-openssl-aux-module/stream`
     if (configureFlags) {
       finalConfigureFlags = `${finalConfigureFlags} ${configureFlags}`
     }
-
-    await exec.exec(`./configure"`, finalConfigureFlags, {
+    notice(`opensslPath:${opensslPath}, finalConfigureFlags:${finalConfigureFlags}`)
+    await exec.exec(`ls`, [cacheDir])
+    await exec.exec(`./configure`, finalConfigureFlags, {
       cwd: extractPath
     })
 
